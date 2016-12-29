@@ -5,6 +5,7 @@ import youtube_dl
 import threading
 import os
 from time import sleep
+import tempfile
 
 PLAYER = 'gst-play-1.0'
 
@@ -15,6 +16,9 @@ def download(res):
         ydl.download([ res['url'] ])
 
 def main():
+    tmpdir = tempfile.TemporaryDirectory(prefix = "ytplayer-")
+    os.chdir(tmpdir.name)
+    print("Using tmpdir: {0}".format(tmpdir.name))
     ids = []
     sem = threading.Semaphore(value = 0)
     thread = Player(ids, sem)
