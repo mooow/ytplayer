@@ -9,7 +9,7 @@ from time import sleep
 PLAYER = 'gst-play-1.0'
 
 def download(res):
-    print("Putting: {0}".format( ytlib.tostring(res) )
+    print("Putting: {0}".format( ytlib.tostring(res) ))
     ydl_opts = {'format' : 'bestaudio', 'outtmpl': '%(id)s.tmp', 'quiet': True}
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([ res['url'] ])
@@ -35,7 +35,7 @@ class Player(threading.Thread):
     def play(self):
         self.sem.acquire()
         obj = self.ids.pop(0)
-        print("Thread doing: {0}".format(ytlib.tostring(res))
+        print("Thread doing: {0}".format(ytlib.tostring(obj)))
         os.system("{0} {1}.tmp </dev/null >/dev/null".format(PLAYER, obj['id']))  # TODO: use another way
         os.system("rm {0}.tmp".format(obj['id']))                                 # TODO: use another way
     
