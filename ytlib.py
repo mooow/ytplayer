@@ -33,3 +33,6 @@ def _get_id(url):
 
 def search1(string):
     return search(string)[0]
+
+def tostring(item):
+    return "{0} [{1}]".format(item['title'], item['id'])
