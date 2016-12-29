@@ -5,16 +5,20 @@ import youtube_dl
 import threading
 import os
 from time import sleep
+import tempfile
 
 PLAYER = 'gst-play-1.0'
 
 def download(res):
-    print("Putting: {0}".format( ytlib.tostring(res) )
+    print("Putting: {0}".format( ytlib.tostring(res) ))
     ydl_opts = {'format' : 'bestaudio', 'outtmpl': '%(id)s.tmp', 'quiet': True}
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([ res['url'] ])
 
 def main():
+    tmpdir = tempfile.TemporaryDirectory(prefix = "ytplayer-")
+    os.chdir(tmpdir.name)
+    print("Using tmpdir: {0}".format(tmpdir.name))
     ids = []
     sem = threading.Semaphore(value = 0)
     thread = Player(ids, sem)
