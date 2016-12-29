@@ -26,18 +26,19 @@ def main():
     thread.start()
     while True:
         try:    
-            s = input("query? ")
+            s = input("query? ").strip()
+            if len(s) == 0: continue
+            res = ytlib.search1(s)
+            Downloader(ids, sem, res).start()
         except KeyboardInterrupt:
-            print("\n\nAsking player to terminate gracefully...", end="")
+            print("\n\nAsking threads to terminate gracefully...", end="")
             killed.acquire(False)
             sem.release()
             thread.join()
             print("done")
             exit(0)
-        res = ytlib.search1(s)
-        download(res)
-        ids.append(res)
-        sem.release()
+        except IndexError:
+            print("Not found")
 
 class Player(threading.Thread):
     def __init__(self, ids, sem, killed):
@@ -60,7 +61,21 @@ class Player(threading.Thread):
     def run(self):
         while True: 
             self.play()
-        
+
+class Downloader(threading.Thread):
+    def __init__(self, ids, sem, res):
+        threading.Thread.__init__(self)
+        self.ids = ids
+        self.sem = sem 
+        self.res = res
+    
+    def run(self):
+        print("Downloading {0}".format( ytlib.tostring(self.res) ))
+        ydl_opts = {'format' : 'bestaudio', 'outtmpl': '%(id)s.tmp', 'quiet': True}
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([ self.res['url'] ])
+        self.ids.append(self.res)
+        self.sem.release()
 
 if __name__ == '__main__':
     main()
