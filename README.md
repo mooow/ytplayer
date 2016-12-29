@@ -7,7 +7,7 @@ and then it will be put in a queue. The songs will be played sequentially.
 
 ## How do you do that?
 We use search what you type on youtube, fetch the first link and then we use
-[https://github.com/rg3/youtube-dl](youtube_dl) (which must be installed on your system) to download
+[youtube_dl](https://github.com/rg3/youtube-dl) (which must be installed on your system) to download
 the audio file, which is then played with gstreamer (which must be installed on your system, but can be
 replaced by whatever player you want)
 
