@@ -8,11 +8,11 @@ from time import sleep
 
 PLAYER = 'gst-play-1.0'
 
-def download(url):
-    print("Putting: {0}".format(url))
+def download(res):
+    print("Putting: {0}".format( ytlib.tostring(res) )
     ydl_opts = {'format' : 'bestaudio', 'outtmpl': '%(id)s.tmp', 'quiet': True}
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+        ydl.download([ res['url'] ])
 
 def main():
     ids = []
@@ -22,8 +22,8 @@ def main():
     while True:
         s = input("query? ")
         res = ytlib.search1(s)
-        download(res['url'])
-        ids.append(res['id'])
+        download(res)
+        ids.append(res)
         sem.release()
 
 class Player(threading.Thread):
@@ -35,9 +35,9 @@ class Player(threading.Thread):
     def play(self):
         self.sem.acquire()
         obj = self.ids.pop(0)
-        print("Thread doing: {0}".format(obj))
-        os.system("{0} {1}.tmp </dev/null >/dev/null".format(PLAYER, obj))  # TODO: use another way
-        os.system("rm {1}.tmp".format(obj))                                 # TODO: use another way
+        print("Thread doing: {0}".format(ytlib.tostring(res))
+        os.system("{0} {1}.tmp </dev/null >/dev/null".format(PLAYER, obj['id']))  # TODO: use another way
+        os.system("rm {0}.tmp".format(obj['id']))                                 # TODO: use another way
     
     def run(self):
         while True: 
