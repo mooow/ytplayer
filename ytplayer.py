@@ -16,7 +16,6 @@ def download(res):
         ydl.download([ res['url'] ])
 
 def main():
-    
     tmpdir = tempfile.TemporaryDirectory(prefix = "ytplayer-")
     os.chdir(tmpdir.name)
     print("Using tmpdir: {0}".format(tmpdir.name))
