@@ -26,9 +26,8 @@ def main():
     while True:
         s = input("query? ")
         res = ytlib.search1(s)
-        download(res)
-        ids.append(res)
-        sem.release()
+        Downloader(ids, sem, res).start()
+        
 
 class Player(threading.Thread):
     def __init__(self, ids, sem):
@@ -46,7 +45,21 @@ class Player(threading.Thread):
     def run(self):
         while True: 
             self.play()
-        
+
+class Downloader(threading.Thread):
+    def __init__(self, ids, sem, res):
+        threading.Thread.__init__(self)
+        self.ids = ids
+        self.sem = sem 
+        self.res = res
+    
+    def run(self):
+        print("Downloading {0}".format( ytlib.tostring(self.res) ))
+        ydl_opts = {'format' : 'bestaudio', 'outtmpl': '%(id)s.tmp', 'quiet': True}
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([ self.res['url'] ])
+        self.ids.append(self.res)
+        self.sem.release()
 
 if __name__ == '__main__':
     main()
