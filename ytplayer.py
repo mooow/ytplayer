@@ -24,9 +24,13 @@ def main():
     thread = Player(ids, sem)
     thread.start()
     while True:
-        s = input("query? ")
-        res = ytlib.search1(s)
-        Downloader(ids, sem, res).start()
+        s = input("query? ").strip()
+        if len(s) == 0: continue
+        try:
+            res = ytlib.search1(s)
+            Downloader(ids, sem, res).start()
+        except IndexError:
+            print("Not found")
         
 
 class Player(threading.Thread):
