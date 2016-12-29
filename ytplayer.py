@@ -16,32 +16,47 @@ def download(res):
         ydl.download([ res['url'] ])
 
 def main():
+    
     tmpdir = tempfile.TemporaryDirectory(prefix = "ytplayer-")
     os.chdir(tmpdir.name)
     print("Using tmpdir: {0}".format(tmpdir.name))
     ids = []
     sem = threading.Semaphore(value = 0)
-    thread = Player(ids, sem)
+    killed = threading.Lock()
+    thread = Player(ids, sem, killed)
     thread.start()
     while True:
-        s = input("query? ")
+        try:    
+            s = input("query? ")
+        except KeyboardInterrupt:
+            print("\n\nAsking player to terminate gracefully...", end="")
+            killed.acquire(False)
+            sem.release()
+            thread.join()
+            print("done")
+            exit(0)
         res = ytlib.search1(s)
         download(res)
         ids.append(res)
         sem.release()
 
 class Player(threading.Thread):
-    def __init__(self, ids, sem):
+    def __init__(self, ids, sem, killed):
         threading.Thread.__init__(self)
         self.ids = ids
-        self.sem = sem 
+        self.sem = sem
+        self.killed = killed
         
     def play(self):
         self.sem.acquire()
+        if self.killed.locked():
+            exit(0)
         obj = self.ids.pop(0)
         print("Thread doing: {0}".format(ytlib.tostring(obj)))
-        os.system("{0} {1}.tmp </dev/null >/dev/null".format(PLAYER, obj['id']))  # TODO: use another way
+        ret = os.system("{0} {1}.tmp </dev/null >/dev/null".format(PLAYER, obj['id']))  # TODO: use another way
         os.system("rm {0}.tmp".format(obj['id']))                                 # TODO: use another way
+        if ret != 0:
+            print("[PLAYER] Player stopped")
     
     def run(self):
         while True: 
@@ -50,3 +65,4 @@ class Player(threading.Thread):
 
 if __name__ == '__main__':
     main()
+    
