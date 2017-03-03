@@ -24,7 +24,7 @@ This program has the following dependencies:
 * gstreamer (gst-play-1.0)
 
 On ArchLinux you should be able to install them by running:
-    pacman -S --needed python python-urllib3 python-pyqt5 python-lxml youtube_dl gst-plugins-base-libs
+	pacman -S --needed python python-urllib3 python-pyqt5 python-lxml youtube_dl gst-plugins-base-libs
     
 ## Compilation
 Before running `ytplayer`, if you want to use the GUI, you **MUST** run `make` beforehand
