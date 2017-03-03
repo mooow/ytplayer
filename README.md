@@ -25,7 +25,7 @@ This program has the following dependencies:
 
 On ArchLinux you should be able to install them by running:
 ```
-pacman -S --needed python python-urllib3 python-pyqt5 python-lxml youtube_dl gst-plugins-base-libs
+pacman -S --needed python python-urllib3 python-pyqt5 python-lxml youtube-dl gst-plugins-base-libs
 ```
     
 ## Compilation
