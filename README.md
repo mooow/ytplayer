@@ -14,6 +14,17 @@ replaced by whatever player you want)
 ## Licensing, Author
 ytplayer is Copyright (C) 2016 of Lorenzo Mureu (more information can be found on the `LICENSE` file)
 
+## Dependencies
+This program has the following dependencies:
+* python3
+* PyQt5
+* python-lxml
+* python-urllib3
+* youtube-dl
+
+On ArchLinux you should be able to install them by running:
+`pacman -S --needed python python-urllib3 python-pyqt5 python-lxml youtube_dl`
+
 ## TODO
 1. Avoid doing things with os.system
 2. Use a dedicated temp folder (instead of current working directory)
